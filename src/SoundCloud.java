@@ -13,6 +13,7 @@ public class SoundCloud{
 
     public SoundCloud() {
         this.users = new HashMap<>();
+        this.musicas = new HashMap<>();
     }
 
     public void registarUser(String nome, String password){
@@ -34,7 +35,7 @@ public class SoundCloud{
         }
     }
 
-    public void addMusica(String titulo, String interprete, String ano, List<String> etiquetas){
+    public void addMusica(String titulo, String interprete, String ano, List<Character> etiquetas){
         this.lockSoundCloud.lock();
         int id = lastID++;
         Musica m = new Musica(id,titulo,interprete,ano,etiquetas);

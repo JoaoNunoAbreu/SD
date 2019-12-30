@@ -1,9 +1,21 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class Client{
+
+    private static int MAXSIZE = 524288; // 0.5 Mb = 500 Kb
+
+    public static void sendFile(Socket s, String file) throws IOException {
+        DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+        FileInputStream fis = new FileInputStream(file);
+        byte[] buffer = new byte[524288];
+
+        while (fis.read(buffer) > 0) {
+            dos.write(buffer);
+        }
+        fis.close();
+        dos.close();
+    }
 
     public static void main(String[] args) throws Exception {
         Socket s = new Socket("localhost",12345);
@@ -19,7 +31,12 @@ public class Client{
                 break;
             pw.println(line);
             pw.flush();
-            System.out.println(br.readLine());
+
+            String answer = br.readLine();
+            System.out.println(answer);
+            if(answer.equals("Upload permitido")){
+                sendFile(s,"musicas/AlanWalker_Faded.mp3");
+            }
         }
         s.shutdownOutput();
         s.shutdownInput();

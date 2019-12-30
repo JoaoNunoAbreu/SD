@@ -6,9 +6,9 @@ public class Musica {
     private String titulo;
     private String interprete;
     private String ano;
-    private List<String> etiquetas;
+    private List<Character> etiquetas;
 
-    public Musica(int id, String titulo, String interprete, String ano, List<String> etiquetas) {
+    public Musica(int id, String titulo, String interprete, String ano, List<Character> etiquetas) {
         this.id = id;
         this.titulo = titulo;
         this.interprete = interprete;
@@ -32,7 +32,7 @@ public class Musica {
         return ano;
     }
 
-    public List<String> getEtiquetas() {
+    public List<Character> getEtiquetas() {
         return etiquetas;
     }
 
@@ -52,7 +52,7 @@ public class Musica {
         this.ano = ano;
     }
 
-    public void setEtiquetas(List<String> etiquetas) {
+    public void setEtiquetas(List<Character> etiquetas) {
         this.etiquetas = etiquetas;
     }
 
