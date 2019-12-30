@@ -7,6 +7,7 @@
 * ```show users``` para mostrar todos os users registados (apagar depois)
 * ```show musicas``` para mostrar todos as músicas registadas (apagar depois)
 
-## TO DO
+## Problemas
 
-* Problema de o ficheiro ser maior do que o buffer de bytes
+1. Socket fecha após execução do método saveFile no ServerWorker (devido aos closes)
+    - Resolução: criar 2 sockets ou não usar DataInputStream e FileOutputStream. No entanto acho que assim não é possível criar o file na diretoria destino para formar o mp3 da música. 
