@@ -38,6 +38,8 @@ public class ServerWorker implements Runnable{
                     }
                     else if(parts[0].equals("show") && parts[1].equals("users")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showUsers();
+                    else if(parts[0].equals("show") && parts[1].equals("musicas")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
+                        answer = sc.showMusicas();
                 }
                 catch (NomeNaoExisteException e) {
                     answer = e.getMessage();
