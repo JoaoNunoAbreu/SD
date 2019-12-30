@@ -1,5 +1,8 @@
 # Projeto SD
 
-## Grupo
+## Notações do cliente
 
-* João Abreu só
+* ```registar <nome> <pass>``` para registar um novo cliente
+* ```login <nome> <pass>``` para dar login (só testa ainda)
+* ```show users``` para mostrar todos os uers registados (apagar depois)
+
