@@ -1,6 +1,6 @@
 package Exceptions;
 
-public class NomeJaExisteException extends Throwable {
+public class NomeJaExisteException extends Exception {
     public NomeJaExisteException(String msg) {
         super(msg);
     }
