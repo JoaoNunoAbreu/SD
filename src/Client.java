@@ -8,7 +8,7 @@ public class Client{
     public static void sendFile(Socket s, String file) throws IOException {
         DataOutputStream dos = new DataOutputStream(s.getOutputStream());
         FileInputStream fis = new FileInputStream(file);
-        byte[] buffer = new byte[524288];
+        byte[] buffer = new byte[MAXSIZE];
 
         while (fis.read(buffer) > 0) {
             dos.write(buffer);

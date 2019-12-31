@@ -1,3 +1,4 @@
+import Exceptions.NomeJaExisteException;
 import Exceptions.NomeNaoExisteException;
 import java.util.HashMap;
 import java.util.List;
@@ -16,16 +17,23 @@ public class SoundCloud{
         this.musicas = new HashMap<>();
     }
 
-    public void registarUser(String nome, String password){
+    public String registarUser(String nome, String password) throws NomeJaExisteException{
         this.lockSoundCloud.lock();
-        User u = new User(nome,password);
-        this.users.put(nome,u);
-        this.lockSoundCloud.unlock();
+        if(users.containsKey(nome)) {
+            this.lockSoundCloud.unlock();
+            throw new NomeJaExisteException("Nome já existe!");
+        }
+        else{
+            User u = new User(nome,password);
+            this.users.put(nome,u);
+            this.lockSoundCloud.unlock();
+            return "User criado com sucesso!";
+        }
     }
 
     public boolean login(String nome, String password) throws NomeNaoExisteException{
         this.lockSoundCloud.lock();
-        if(users.get(nome) == null) {
+        if(users.get(nome) == null){
             this.lockSoundCloud.unlock();
             throw new NomeNaoExisteException("Nome não existe!");
         }

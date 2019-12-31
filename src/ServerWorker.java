@@ -1,3 +1,4 @@
+import Exceptions.NomeJaExisteException;
 import Exceptions.NomeNaoExisteException;
 
 import java.io.*;
@@ -8,15 +9,17 @@ public class ServerWorker implements Runnable{
     private Socket s;
     private SoundCloud sc;
 
+    private static int MAXSIZE = 524288; // 0.5 Mb = 500 Kb
+
     public ServerWorker(Socket s, SoundCloud sc){
         this.s = s;
         this.sc = sc;
     }
 
-    private void saveFile(Socket clientSock, String size) throws IOException {
-        DataInputStream dis = new DataInputStream(clientSock.getInputStream());
-        FileOutputStream fos = new FileOutputStream("musicas/testfile.mp3");
-        byte[] buffer = new byte[524288];
+    private void saveFile(String size) throws IOException {
+        DataInputStream dis = new DataInputStream(s.getInputStream());
+        FileOutputStream fos = new FileOutputStream("musicas/testfile.txt");
+        byte[] buffer = new byte[MAXSIZE];
 
         int filesize = Integer.parseInt(size); // Send file size in separate msg
         int read = 0;
@@ -28,7 +31,6 @@ public class ServerWorker implements Runnable{
             System.out.println("read " + totalRead + " bytes.");
             fos.write(buffer, 0, read);
         }
-
         fos.close();
         dis.close();
     }
@@ -45,24 +47,23 @@ public class ServerWorker implements Runnable{
                 if(line == null)
                     break;
 
-                System.out.println("linha lida foi = " + line);
                 // Tokenize da linha recebida
                 String[] parts = line.split(" ");
 
                 try {
                     if(parts[0].equals("registar")){
-                        sc.registarUser(parts[1],parts[2]);
-                        answer = "User criado com sucesso.";
+                        answer = sc.registarUser(parts[1],parts[2]);
                     }
                     else if(parts[0].equals("login")){
-                        sc.login(parts[1],parts[2]);
-                        answer = "User autenticado com sucesso.";
+                        if(sc.login(parts[1],parts[2]))
+                            answer = "User autenticado com sucesso.";
+                        else answer = "User não foi autenticado.";
                     }
                     else if(parts[0].equals("upload")){
                         answer = "Upload permitido";
                         pw.println(answer);
                         pw.flush();
-                        saveFile(s,parts[1]);
+                        saveFile(parts[1]);
                     }
                     else if(parts[0].equals("show") && parts[1].equals("users")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showUsers();
@@ -70,7 +71,7 @@ public class ServerWorker implements Runnable{
                         answer = sc.showMusicas();
 
                 }
-                catch (NomeNaoExisteException e) {
+                catch (NomeNaoExisteException | NomeJaExisteException e) {
                     answer = e.getMessage();
                 }
                 if(!parts[0].equals("upload")) {
