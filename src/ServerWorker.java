@@ -55,9 +55,7 @@ public class ServerWorker implements Runnable{
                         answer = sc.registarUser(parts[1],parts[2]);
                     }
                     else if(parts[0].equals("login")){
-                        if(sc.login(parts[1],parts[2]))
-                            answer = "User autenticado com sucesso.";
-                        else answer = "User não foi autenticado.";
+                        answer = String.valueOf(sc.login(parts[1],parts[2]));
                     }
                     else if(parts[0].equals("upload")){
                         answer = "Upload permitido";
