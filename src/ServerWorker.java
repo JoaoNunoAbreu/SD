@@ -1,3 +1,4 @@
+import Exceptions.MusicaNaoExisteException;
 import Exceptions.NomeJaExisteException;
 import Exceptions.NomeNaoExisteException;
 
@@ -83,14 +84,14 @@ public class ServerWorker implements Runnable{
                     else if(parts[0].equals("show") && parts[1].equals("musicas")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showMusicas();
                 }
-                catch (NomeNaoExisteException | NomeJaExisteException e) {
+                catch (NomeNaoExisteException | NomeJaExisteException | MusicaNaoExisteException e) {
                     answer = e.getMessage();
                 }
                 pw.println(answer);
                 pw.flush();
-                /*if(parts[0].equals("upload")){
+                if(parts[0].equals("upload")){
                     saveFile(filesize);
-                }*/
+                }
             }
         }
         catch (IOException e) {

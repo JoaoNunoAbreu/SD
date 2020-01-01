@@ -1,3 +1,4 @@
+import Exceptions.MusicaNaoExisteException;
 import Exceptions.NomeJaExisteException;
 import Exceptions.NomeNaoExisteException;
 
@@ -55,17 +56,27 @@ public class SoundCloud{
     }
 
     public List<Musica> procura(String etiqueta){
+        this.lockSoundCloud.lock();
         List<Musica> res = new ArrayList<>();
         for(Musica m: this.musicas.values()){
             if(m.getEtiquetas().contains(etiqueta))
                 res.add(m);
         }
+        this.lockSoundCloud.unlock();
         return res;
     }
 
-    public String download(int id){
-        this.musicas.get(id).downloadHappened();
-        return "Download feito com sucesso";
+    public String download(int id) throws MusicaNaoExisteException {
+        this.lockSoundCloud.lock();
+        if(!this.musicas.containsKey(id)){
+            this.lockSoundCloud.unlock();
+            throw new MusicaNaoExisteException("Música não existe.");
+        }
+        else{
+            this.musicas.get(id).downloadHappened();
+            this.lockSoundCloud.unlock();
+            return "Download feito com sucesso";
+        }
     }
 
     public String showUsers(){
