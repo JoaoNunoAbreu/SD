@@ -67,8 +67,16 @@ public class ServerWorker implements Runnable{
                     else if(parts[0].equals("upload")){
                         String[] etiquetas = parts[4].split(",");
                         List<String> wordList = Arrays.asList(etiquetas);
-                        answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList));
+                        answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList,0));
                         filesize = calculaTam(parts[5]);
+
+                    }
+                    else if(parts[0].equals("procura")){
+                        List<Musica> res = sc.procura(parts[1]);
+                        answer = res.toString();
+                    }
+                    else if(parts[0].equals("download")){
+                        answer = sc.download(Integer.parseInt(parts[1]));
                     }
                     else if(parts[0].equals("show") && parts[1].equals("users")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showUsers();
@@ -80,9 +88,9 @@ public class ServerWorker implements Runnable{
                 }
                 pw.println(answer);
                 pw.flush();
-                if(parts[0].equals("upload")){
+                /*if(parts[0].equals("upload")){
                     saveFile(filesize);
-                }
+                }*/
             }
         }
         catch (IOException e) {

@@ -33,9 +33,9 @@ public class Client{
 
             String answer = br.readLine();
             System.out.println(answer);
-            if(answer.matches(".*\\d.*")){
+            /*if(answer.matches(".*\\d.*")){
                 sendFile(s,"musicas/AlanWalker_Faded.mp3");
-            }
+            }*/
         }
         s.shutdownOutput();
         s.shutdownInput();

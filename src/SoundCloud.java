@@ -1,5 +1,7 @@
 import Exceptions.NomeJaExisteException;
 import Exceptions.NomeNaoExisteException;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +45,27 @@ public class SoundCloud{
         }
     }
 
-    public int addMusica(String titulo, String interprete, Integer ano, List<String> etiquetas){
+    public int addMusica(String titulo, String interprete, Integer ano, List<String> etiquetas, int vezes_descarregada){
         this.lockSoundCloud.lock();
         int id = lastID++;
-        Musica m = new Musica(id,titulo,interprete,ano,etiquetas);
+        Musica m = new Musica(id,titulo,interprete,ano,etiquetas,vezes_descarregada);
         this.musicas.put(id,m);
         this.lockSoundCloud.unlock();
         return id;
+    }
+
+    public List<Musica> procura(String etiqueta){
+        List<Musica> res = new ArrayList<>();
+        for(Musica m: this.musicas.values()){
+            if(m.getEtiquetas().contains(etiqueta))
+                res.add(m);
+        }
+        return res;
+    }
+
+    public String download(int id){
+        this.musicas.get(id).downloadHappened();
+        return "Download feito com sucesso";
     }
 
     public String showUsers(){
