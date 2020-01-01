@@ -44,6 +44,7 @@ public class ServerWorker implements Runnable{
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
             PrintWriter pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+            int filesize = 0;
             while (true) {
 
                 String line;
@@ -67,10 +68,7 @@ public class ServerWorker implements Runnable{
                         String[] etiquetas = parts[4].split(",");
                         List<String> wordList = Arrays.asList(etiquetas);
                         answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList));
-                        int filesize = calculaTam(parts[5]);
-                        pw.println(answer);
-                        pw.flush();
-                        saveFile(filesize);
+                        filesize = calculaTam(parts[5]);
                     }
                     else if(parts[0].equals("show") && parts[1].equals("users")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showUsers();
@@ -80,9 +78,10 @@ public class ServerWorker implements Runnable{
                 catch (NomeNaoExisteException | NomeJaExisteException e) {
                     answer = e.getMessage();
                 }
-                if(!parts[0].equals("upload")){
-                    pw.println(answer);
-                    pw.flush();
+                pw.println(answer);
+                pw.flush();
+                if(parts[0].equals("upload")){
+                    saveFile(filesize);
                 }
             }
         }
