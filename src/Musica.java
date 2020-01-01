@@ -5,10 +5,10 @@ public class Musica {
     private int id;
     private String titulo;
     private String interprete;
-    private String ano;
-    private List<Character> etiquetas;
+    private Integer ano;
+    private List<String> etiquetas;
 
-    public Musica(int id, String titulo, String interprete, String ano, List<Character> etiquetas) {
+    public Musica(int id, String titulo, String interprete, Integer ano, List<String> etiquetas) {
         this.id = id;
         this.titulo = titulo;
         this.interprete = interprete;
@@ -28,11 +28,11 @@ public class Musica {
         return interprete;
     }
 
-    public String getAno() {
+    public Integer getAno() {
         return ano;
     }
 
-    public List<Character> getEtiquetas() {
+    public List<String> getEtiquetas() {
         return etiquetas;
     }
 
@@ -48,11 +48,11 @@ public class Musica {
         this.interprete = interprete;
     }
 
-    public void setAno(String ano) {
+    public void setAno(Integer ano) {
         this.ano = ano;
     }
 
-    public void setEtiquetas(List<Character> etiquetas) {
+    public void setEtiquetas(List<String> etiquetas) {
         this.etiquetas = etiquetas;
     }
 

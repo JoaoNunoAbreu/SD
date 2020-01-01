@@ -14,7 +14,6 @@ public class Client{
             dos.write(buffer);
         }
         fis.close();
-        dos.close();
     }
 
     public static void main(String[] args) throws Exception {
@@ -34,7 +33,7 @@ public class Client{
 
             String answer = br.readLine();
             System.out.println(answer);
-            if(answer.equals("Upload permitido")){
+            if(answer.matches(".*\\d.*")){
                 sendFile(s,"musicas/AlanWalker_Faded.mp3");
             }
         }

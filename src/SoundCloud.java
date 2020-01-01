@@ -43,12 +43,13 @@ public class SoundCloud{
         }
     }
 
-    public void addMusica(String titulo, String interprete, String ano, List<Character> etiquetas){
+    public int addMusica(String titulo, String interprete, Integer ano, List<String> etiquetas){
         this.lockSoundCloud.lock();
         int id = lastID++;
         Musica m = new Musica(id,titulo,interprete,ano,etiquetas);
         this.musicas.put(id,m);
         this.lockSoundCloud.unlock();
+        return id;
     }
 
     public String showUsers(){
