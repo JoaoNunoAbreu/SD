@@ -10,10 +10,12 @@ public class Client{
         FileInputStream fis = new FileInputStream(file);
         byte[] buffer = new byte[MAXSIZE];
 
-        while (fis.read(buffer) > 0) {
-            dos.write(buffer);
+        int read = 0;
+        while ((read=fis.read(buffer)) > 0) {
+            dos.write(buffer,0,read);
         }
         fis.close();
+
     }
 
     public static void main(String[] args) throws Exception {
