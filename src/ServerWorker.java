@@ -65,8 +65,10 @@ public class ServerWorker implements Runnable{
                 catch (NomeNaoExisteException | NomeJaExisteException | MusicaNaoExisteException e) {
                     answer = e.getMessage();
                 }
-                pw.println(answer);
-                pw.flush();
+                if(!parts[0].equals("download")){
+                    pw.println(answer);
+                    pw.flush();
+                }
                 if(parts[0].equals("upload")){
                     FileOperations.saveFile(s,filesize,"musicas/" + answer + ".mp3");
                 }
