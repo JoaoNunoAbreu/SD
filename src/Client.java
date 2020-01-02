@@ -15,7 +15,6 @@ public class Client{
             dos.write(buffer,0,read);
         }
         fis.close();
-
     }
 
     public static void main(String[] args) throws Exception {
@@ -28,14 +27,14 @@ public class Client{
         String line;
         while(true){
             line = reader_terminal.readLine();
-            if(line == null)
+            if(line == null || line.equals("sair"))
                 break;
             pw.println(line);
             pw.flush();
 
             String answer = br.readLine();
             System.out.println(answer);
-            if(answer.matches(".*\\d.*")){
+            if(answer.matches("[0-9]+")){
                 sendFile(s,"musicas/AlanWalker_Faded.mp3");
             }
         }

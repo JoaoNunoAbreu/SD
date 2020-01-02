@@ -46,9 +46,8 @@ public class ServerWorker implements Runnable{
             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
             PrintWriter pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
             int filesize = 0;
+            String line;
             while (true) {
-
-                String line;
                 String answer = "Comando inválido";
                 line = br.readLine();
                 if(line == null)
@@ -70,7 +69,6 @@ public class ServerWorker implements Runnable{
                         List<String> wordList = Arrays.asList(etiquetas);
                         answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList,0));
                         filesize = calculaTam(parts[5]);
-
                     }
                     else if(parts[0].equals("procura")){
                         List<Musica> res = sc.procura(parts[1]);
