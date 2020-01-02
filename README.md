@@ -3,7 +3,7 @@
 ## Notações do cliente
 
 * ```registar <nome> <pass>``` para registar um novo cliente
-* ```login <nome> <pass>``` para dar login (só testa ainda)
+* ```login <nome> <pass>``` para dar login
 * ```upload <titulo> <interprete> <ano> <etiqueta1,etiqueta2,...> <path>``` para dar upload (as etiquetas têm de ser separadas por vírgulas)
 * ```procura <etiqueta>``` para fazer a procura
 * ```download <id> <diretoria>``` para fazer download

@@ -13,11 +13,13 @@ public class ServerWorker implements Runnable{
     private Socket s;
     private SoundCloud sc;
     private User current_user;
+    private Notifications notifications;
 
-    public ServerWorker(Socket s, SoundCloud sc){
+    public ServerWorker(Socket s, SoundCloud sc, Notifications n){
         this.s = s;
         this.sc = sc;
         this.current_user = null;
+        this.notifications = n;
     }
 
     public void run() {
@@ -42,6 +44,7 @@ public class ServerWorker implements Runnable{
                     }
                     else if(parts[0].equals("login")){
                         this.current_user = sc.login(parts[1],parts[2]);
+                        notifications.addClient(parts[1],pw);
                         answer = "Conexão establecida";
                     }
                     else if(parts[0].equals("upload")){
@@ -83,6 +86,7 @@ public class ServerWorker implements Runnable{
                     pw.flush();
                 }
                 if(parts[0].equals("upload")){
+                    //notifications.notifyAll("Notificação! título: " + parts[1] + ", autor: " + parts[2]);
                     FileOperations.saveFile(s,filesize,"musicas/" + answer + ".mp3");
                 }
             }
