@@ -1,6 +1,7 @@
 import Exceptions.MusicaNaoExisteException;
 import Exceptions.NomeJaExisteException;
 import Exceptions.NomeNaoExisteException;
+import Exceptions.PalavraPasseIncorretaException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,28 +22,34 @@ public class SoundCloud{
     }
 
     public String registarUser(String nome, String password) throws NomeJaExisteException{
-        this.lockSoundCloud.lock();
-        if(users.containsKey(nome)) {
-            this.lockSoundCloud.unlock();
-            throw new NomeJaExisteException("Nome já existe!");
+        try {
+            this.lockSoundCloud.lock();
+            if(users.containsKey(nome))
+                throw new NomeJaExisteException("Nome já existe!");
+            else{
+                User u = new User(nome,password);
+                this.users.put(nome,u);
+                return "User criado com sucesso!";
+            }
         }
-        else{
-            User u = new User(nome,password);
-            this.users.put(nome,u);
+        finally {
             this.lockSoundCloud.unlock();
-            return "User criado com sucesso!";
         }
+
     }
 
-    public boolean login(String nome, String password) throws NomeNaoExisteException{
-        this.lockSoundCloud.lock();
-        if(users.get(nome) == null){
-            this.lockSoundCloud.unlock();
-            throw new NomeNaoExisteException("Nome não existe!");
+    public User login(String nome, String password) throws NomeNaoExisteException,PalavraPasseIncorretaException{
+        try{
+            this.lockSoundCloud.lock();
+            if(users.get(nome) == null)
+                throw new NomeNaoExisteException("Nome não existe!");
+            else
+                if(!users.get(nome).getPassword().equals(password))
+                    throw new PalavraPasseIncorretaException("Palavra-passe incorrecta!");
+                else return users.get(nome);
         }
-        else{
+        finally{
             this.lockSoundCloud.unlock();
-            return users.get(nome).getPassword().equals(password);
         }
     }
 
@@ -67,13 +74,13 @@ public class SoundCloud{
     }
 
     public void download(int id) throws MusicaNaoExisteException {
-        this.lockSoundCloud.lock();
-        if(!this.musicas.containsKey(id)){
-            this.lockSoundCloud.unlock();
-            throw new MusicaNaoExisteException("Música não existe.");
+        try {
+            this.lockSoundCloud.lock();
+            if(!this.musicas.containsKey(id))
+                throw new MusicaNaoExisteException("Música não existe.");
+            else this.musicas.get(id).downloadHappened();
         }
-        else{
-            this.musicas.get(id).downloadHappened();
+        finally {
             this.lockSoundCloud.unlock();
         }
     }

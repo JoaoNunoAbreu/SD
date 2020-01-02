@@ -1,6 +1,7 @@
 import Exceptions.MusicaNaoExisteException;
 import Exceptions.NomeJaExisteException;
 import Exceptions.NomeNaoExisteException;
+import Exceptions.PalavraPasseIncorretaException;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,10 +12,12 @@ public class ServerWorker implements Runnable{
 
     private Socket s;
     private SoundCloud sc;
+    private User current_user;
 
     public ServerWorker(Socket s, SoundCloud sc){
         this.s = s;
         this.sc = sc;
+        this.current_user = null;
     }
 
     public void run() {
@@ -38,31 +41,41 @@ public class ServerWorker implements Runnable{
                         answer = sc.registarUser(parts[1],parts[2]);
                     }
                     else if(parts[0].equals("login")){
-                        answer = String.valueOf(sc.login(parts[1],parts[2]));
+                        this.current_user = sc.login(parts[1],parts[2]);
+                        answer = "Conexão establecida";
                     }
                     else if(parts[0].equals("upload")){
-                        String[] etiquetas = parts[4].split(",");
-                        List<String> wordList = Arrays.asList(etiquetas);
-                        answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList,0));
-                        filesize = FileOperations.calculaTam(parts[5]);
+                        if(current_user != null){
+                            String[] etiquetas = parts[4].split(",");
+                            List<String> wordList = Arrays.asList(etiquetas);
+                            answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList,0));
+                            filesize = FileOperations.calculaTam(parts[5]);
+                        }
+                        else answer = "Login não foi efetuado!";
                     }
                     else if(parts[0].equals("procura")){
-                        List<Musica> res = sc.procura(parts[1]);
-                        answer = res.toString();
+                        if(current_user != null){
+                            List<Musica> res = sc.procura(parts[1]);
+                            answer = res.toString();
+                        }
+                        else answer = "Login não foi efetuado!";
                     }
                     else if(parts[0].equals("download")){
-                        sc.download(Integer.parseInt(parts[1]));
-                        String path = "musicas/" + parts[1] + ".mp3";
-                        pw.println("ready " + FileOperations.calculaTam(path) + " " + parts[2] + "/" + parts[1]+".mp3");
-                        pw.flush();
-                        FileOperations.sendFile(s,path);
+                        if(current_user != null) {
+                            sc.download(Integer.parseInt(parts[1]));
+                            String path = "musicas/" + parts[1] + ".mp3";
+                            pw.println("ready " + FileOperations.calculaTam(path) + " " + parts[2] + "/" + parts[1] + ".mp3");
+                            pw.flush();
+                            FileOperations.sendFile(s, path);
+                        }
+                        else answer = "Login não foi efetuado!";
                     }
                     else if(parts[0].equals("show") && parts[1].equals("users")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showUsers();
                     else if(parts[0].equals("show") && parts[1].equals("musicas")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showMusicas();
                 }
-                catch (NomeNaoExisteException | NomeJaExisteException | MusicaNaoExisteException e) {
+                catch (NomeNaoExisteException | NomeJaExisteException | MusicaNaoExisteException | PalavraPasseIncorretaException e) {
                     answer = e.getMessage();
                 }
                 if(!parts[0].equals("download")){
