@@ -12,33 +12,9 @@ public class ServerWorker implements Runnable{
     private Socket s;
     private SoundCloud sc;
 
-    private static int MAXSIZE = 524288; // 0.5 Mb = 500 Kb
-
     public ServerWorker(Socket s, SoundCloud sc){
         this.s = s;
         this.sc = sc;
-    }
-
-    private void saveFile(int filesize) throws IOException {
-        DataInputStream dis = new DataInputStream(s.getInputStream());
-        FileOutputStream fos = new FileOutputStream("musicas/testfile.mp3");
-        byte[] buffer = new byte[MAXSIZE];
-
-        int read = 0;
-        int totalRead = 0;
-        int remaining = filesize;
-        while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-            totalRead += read;
-            remaining -= read;
-            System.out.println("read " + totalRead + " bytes.");
-            fos.write(buffer, 0, read);
-        }
-        fos.close();
-    }
-
-    public int calculaTam(String path){
-        File file = new File(path);
-        return (int) file.length();
     }
 
     public void run() {
@@ -68,14 +44,18 @@ public class ServerWorker implements Runnable{
                         String[] etiquetas = parts[4].split(",");
                         List<String> wordList = Arrays.asList(etiquetas);
                         answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList,0));
-                        filesize = calculaTam(parts[5]);
+                        filesize = FileOperations.calculaTam(parts[5]);
                     }
                     else if(parts[0].equals("procura")){
                         List<Musica> res = sc.procura(parts[1]);
                         answer = res.toString();
                     }
                     else if(parts[0].equals("download")){
-                        answer = sc.download(Integer.parseInt(parts[1]));
+                        sc.download(Integer.parseInt(parts[1]));
+                        String path = "musicas/" + parts[1] + ".mp3";
+                        pw.println("ready " + FileOperations.calculaTam(path) + " " + parts[2] + "/" + parts[1]+".mp3");
+                        pw.flush();
+                        FileOperations.sendFile(s,path);
                     }
                     else if(parts[0].equals("show") && parts[1].equals("users")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showUsers();
@@ -88,7 +68,7 @@ public class ServerWorker implements Runnable{
                 pw.println(answer);
                 pw.flush();
                 if(parts[0].equals("upload")){
-                    saveFile(filesize);
+                    FileOperations.saveFile(s,filesize,"musicas/" + answer + ".mp3");
                 }
             }
         }

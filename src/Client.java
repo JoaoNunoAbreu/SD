@@ -3,20 +3,6 @@ import java.net.Socket;
 
 public class Client{
 
-    private static int MAXSIZE = 524288; // 0.5 Mb = 500 Kb
-
-    public static void sendFile(Socket s, String file) throws IOException {
-        DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-        FileInputStream fis = new FileInputStream(file);
-        byte[] buffer = new byte[MAXSIZE];
-
-        int read = 0;
-        while ((read=fis.read(buffer)) > 0) {
-            dos.write(buffer,0,read);
-        }
-        fis.close();
-    }
-
     public static void main(String[] args) throws Exception {
         Socket s = new Socket("localhost",12345);
 
@@ -34,8 +20,16 @@ public class Client{
 
             String answer = br.readLine();
             System.out.println(answer);
+
+            String[] parts_line = line.split(" ");
+            String[] parts_answer = line.split(" ");
+
             if(answer.matches("[0-9]+")){
-                sendFile(s,"musicas/AlanWalker_Faded.mp3");
+                FileOperations.sendFile(s,parts_line[5]);
+            }
+            else if(parts_answer[0].equals("ready")){
+                System.out.println("ENTROU");
+                FileOperations.saveFile(s,Integer.parseInt(parts_answer[1]),parts_answer[2]);
             }
         }
         s.shutdownOutput();

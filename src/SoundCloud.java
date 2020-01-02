@@ -66,7 +66,7 @@ public class SoundCloud{
         return res;
     }
 
-    public String download(int id) throws MusicaNaoExisteException {
+    public void download(int id) throws MusicaNaoExisteException {
         this.lockSoundCloud.lock();
         if(!this.musicas.containsKey(id)){
             this.lockSoundCloud.unlock();
@@ -75,7 +75,6 @@ public class SoundCloud{
         else{
             this.musicas.get(id).downloadHappened();
             this.lockSoundCloud.unlock();
-            return "Download feito com sucesso";
         }
     }
 
