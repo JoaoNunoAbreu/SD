@@ -39,15 +39,15 @@ public class ServerWorker implements Runnable{
                 String[] parts = line.split(" ");
 
                 try {
-                    if(parts[0].equals("registar")){
+                    if(parts[0].equals("registar") && parts.length == 3){
                         answer = sc.registarUser(parts[1],parts[2]);
                     }
-                    else if(parts[0].equals("login")){
+                    else if(parts[0].equals("login") && parts.length == 3){
                         this.current_user = sc.login(parts[1],parts[2]);
                         notifications.addClient(parts[1],pw);
                         answer = "Conexão establecida";
                     }
-                    else if(parts[0].equals("upload")){
+                    else if(parts[0].equals("upload") && parts.length == 6){
                         if(current_user != null){
                             String[] etiquetas = parts[4].split(",");
                             List<String> wordList = Arrays.asList(etiquetas);
@@ -56,14 +56,14 @@ public class ServerWorker implements Runnable{
                         }
                         else answer = "Login não foi efetuado!";
                     }
-                    else if(parts[0].equals("procura")){
+                    else if(parts[0].equals("procura") && parts.length == 2){
                         if(current_user != null){
                             List<Musica> res = sc.procura(parts[1]);
                             answer = res.toString();
                         }
                         else answer = "Login não foi efetuado!";
                     }
-                    else if(parts[0].equals("download")){
+                    else if(parts[0].equals("download") && parts.length == 3){
                         if(current_user != null) {
                             sc.download(Integer.parseInt(parts[1]));
                             String path = "musicas/" + parts[1] + ".mp3";
@@ -73,9 +73,9 @@ public class ServerWorker implements Runnable{
                         }
                         else answer = "Login não foi efetuado!";
                     }
-                    else if(parts[0].equals("show") && parts[1].equals("users")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
+                    else if(parts[0].equals("show") && parts[1].equals("users") && parts.length == 2) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showUsers();
-                    else if(parts[0].equals("show") && parts[1].equals("musicas")) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
+                    else if(parts[0].equals("show") && parts[1].equals("musicas") && parts.length == 2) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showMusicas();
                 }
                 catch (NomeNaoExisteException | NomeJaExisteException | MusicaNaoExisteException | PalavraPasseIncorretaException e) {
@@ -86,8 +86,9 @@ public class ServerWorker implements Runnable{
                     pw.flush();
                 }
                 if(parts[0].equals("upload")){
-                    //notifications.notifyAll("Notificação! título: " + parts[1] + ", autor: " + parts[2]);
-                    FileOperations.saveFile(s,filesize,"musicas/" + answer + ".mp3");
+                    notifications.setMessage("Notificação! título: " + parts[1] + ", autor: " + parts[2]);
+                    new Thread(new NotificationsThread(notifications)).start();
+                    FileOperations.saveFile(s,filesize,"musicas/" + answer + ".txt");
                 }
             }
         }

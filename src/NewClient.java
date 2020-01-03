@@ -25,7 +25,7 @@ public class NewClient implements java.lang.Runnable{
             List<String> etiquetas = new ArrayList<>();
             etiquetas.add("rock");
             etiquetas.add("pop");
-            String path = "/Users/joaonunoabreu/Desktop/AlanWalker_Faded.mp3";
+            String path = "/Users/joaonunoabreu/Desktop/teste.txt";
             System.out.println(sc.upload("titulo","interprete",1999,etiquetas,path));
         }
         catch(NomeJaExisteException | SoundCloudRemotoException | NomeNaoExisteException | PalavraPasseIncorretaException e){

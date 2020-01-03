@@ -1,9 +1,6 @@
 import Exceptions.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.List;
 
@@ -16,7 +13,7 @@ public class SoundCloudRemoto{
     public SoundCloudRemoto(String host, int port) throws IOException{
         this.s = new Socket(host,port);
         this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        this.pw = new PrintWriter(s.getOutputStream());
+        this.pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
     }
 
     public String registarUser(String nome, String pass) throws NomeJaExisteException,SoundCloudRemotoException{

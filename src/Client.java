@@ -8,7 +8,7 @@ public class Client{
 
         BufferedReader reader_terminal = new BufferedReader(new InputStreamReader(System.in));
         BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        PrintWriter pw = new PrintWriter(s.getOutputStream());
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
 
         String line;
         while(true){

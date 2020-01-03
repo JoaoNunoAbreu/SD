@@ -4,17 +4,16 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Notifications {
+public class Notifications{
 
     private final Map<String, PrintWriter> clients;
     private final Lock locker;
-
+    private String message;
 
     public Notifications() {
         clients = new HashMap<>();
         locker = new ReentrantLock();
     }
-
 
     public void addClient(String username, PrintWriter pw) {
         locker.lock();
@@ -22,21 +21,11 @@ public class Notifications {
         locker.unlock();
     }
 
-
-    public void notify(String username, String message) {
-        locker.lock();
-
-        PrintWriter pw = clients.get(username);
-
-        locker.unlock();
-
-        if (pw != null) {
-            pw.println(message);
-            pw.flush();
-        }
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void notifyAll(String message){
+    public void notificarTodos(){
         locker.lock();
         for(String client : this.clients.keySet()){
             PrintWriter pw = clients.get(client);
@@ -45,12 +34,6 @@ public class Notifications {
                 pw.flush();
             }
         }
-        locker.unlock();
-    }
-
-    public void remove(String username) {
-        locker.lock();
-        clients.remove(username);
         locker.unlock();
     }
 }

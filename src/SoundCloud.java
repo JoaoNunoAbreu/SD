@@ -35,7 +35,6 @@ public class SoundCloud{
         finally {
             this.lockSoundCloud.unlock();
         }
-
     }
 
     public User login(String nome, String password) throws NomeNaoExisteException,PalavraPasseIncorretaException{
