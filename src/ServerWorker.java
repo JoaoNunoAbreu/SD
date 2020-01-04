@@ -44,7 +44,7 @@ public class ServerWorker implements Runnable{
                     }
                     else if(parts[0].equals("login") && parts.length == 3){
                         this.current_user = sc.login(parts[1],parts[2]);
-                        notifications.addClient(parts[1],pw);
+                        notifications.addClient(parts[1],s);
                         answer = "Conexão establecida";
                     }
                     else if(parts[0].equals("upload") && parts.length == 6){
@@ -53,6 +53,9 @@ public class ServerWorker implements Runnable{
                             List<String> wordList = Arrays.asList(etiquetas);
                             answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList,0));
                             filesize = FileOperations.calculaTam(parts[5]);
+                            notifications.setMessage("Notificação! título: " + parts[1] + ", autor: " + parts[2]);
+
+                            new Thread(new NotificationsThread(notifications)).start();
                         }
                         else answer = "Login não foi efetuado!";
                     }
@@ -77,6 +80,8 @@ public class ServerWorker implements Runnable{
                         answer = sc.showUsers();
                     else if(parts[0].equals("show") && parts[1].equals("musicas") && parts.length == 2) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
                         answer = sc.showMusicas();
+                    else if(parts[0].equals("show") && parts[1].equals("notificacoes") && parts.length == 2) // TIRAR DEPOIS ESTE IF E O MÉTODO USADO "showUsers" DA CLASSE SOUNDCLOUD
+                        answer = notifications.getClients().toString();
                 }
                 catch (NomeNaoExisteException | NomeJaExisteException | MusicaNaoExisteException | PalavraPasseIncorretaException e) {
                     answer = e.getMessage();
@@ -86,8 +91,6 @@ public class ServerWorker implements Runnable{
                     pw.flush();
                 }
                 if(parts[0].equals("upload")){
-                    notifications.setMessage("Notificação! título: " + parts[1] + ", autor: " + parts[2]);
-                    new Thread(new NotificationsThread(notifications)).start();
                     FileOperations.saveFile(s,filesize,"musicas/" + answer + ".txt");
                 }
             }
