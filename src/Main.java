@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String [] args) throws Exception {
 
-        int NUM_THREADS = 10;
+        int NUM_THREADS = 1;
         Thread[] threads = new Thread[NUM_THREADS];
         SoundCloudRemoto[] stubs = new SoundCloudRemoto[NUM_THREADS];
 

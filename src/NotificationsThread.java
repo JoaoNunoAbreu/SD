@@ -8,8 +8,7 @@ public class NotificationsThread implements Runnable {
 
     public void run(){
         notifications.notificarTodos();
-
-        try { // ----------------------------- Para tirar prob -----------------------------
+        try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
