@@ -1,4 +1,4 @@
-/*import java.io.IOException;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Notifications{
 
-    private final Map<String, Socket> clients;
+    private final Map<String, PrintWriter> clients;
     private final Lock locker;
     private String message;
 
@@ -18,13 +18,13 @@ public class Notifications{
         locker = new ReentrantLock();
     }
 
-    public void addClient(String username, Socket s) {
+    public void addClient(String username, PrintWriter pw) {
         locker.lock();
-        clients.put(username, s);
+        clients.put(username,pw);
         locker.unlock();
     }
 
-    public Map<String, Socket> getClients() {
+    public Map<String, PrintWriter> getClients() {
         return clients;
     }
 
@@ -35,13 +35,7 @@ public class Notifications{
     public void notificarTodos(){
         locker.lock();
         for(String client : this.clients.keySet()){
-            Socket s = clients.get(client);
-            PrintWriter pw = null;
-            try {
-                pw = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            PrintWriter pw = clients.get(client);
             if (pw != null) {
                 pw.println(message);
                 pw.flush();
@@ -49,4 +43,4 @@ public class Notifications{
         }
         locker.unlock();
     }
-}*/
+}

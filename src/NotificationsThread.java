@@ -1,4 +1,4 @@
-/*public class NotificationsThread implements Runnable {
+public class NotificationsThread implements Runnable {
 
     private Notifications notifications;
 
@@ -14,4 +14,4 @@
             e.printStackTrace();
         }
     }
-}*/
+}

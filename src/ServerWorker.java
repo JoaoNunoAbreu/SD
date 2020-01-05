@@ -13,13 +13,13 @@ public class ServerWorker implements Runnable{
     private Socket s;
     private SoundCloud sc;
     private User current_user;
-    //private Notifications notifications;
+    private Notifications notifications;
 
-    public ServerWorker(Socket s, SoundCloud sc){
+    public ServerWorker(Socket s, SoundCloud sc, Notifications n){
         this.s = s;
         this.sc = sc;
         this.current_user = null;
-        //this.notifications = n;
+        this.notifications = n;
     }
 
     public void run() {
@@ -44,7 +44,7 @@ public class ServerWorker implements Runnable{
                     }
                     else if(parts[0].equals("login") && parts.length == 3){
                         this.current_user = sc.login(parts[1],parts[2]);
-                        //notifications.addClient(parts[1],pw);
+                        notifications.addClient(parts[1],pw);
                         answer = "Conexão establecida";
                     }
                     else if(parts[0].equals("upload") && parts.length == 6){
@@ -53,8 +53,8 @@ public class ServerWorker implements Runnable{
                             List<String> wordList = Arrays.asList(etiquetas);
                             answer = String.valueOf(sc.addMusica(parts[1],parts[2],Integer.parseInt(parts[3]),wordList,0));
                             filesize = FileOperations.calculaTam(parts[5]);
-                            //notifications.setMessage("Notificação! título: " + parts[1] + ", autor: " + parts[2]);
-                            //new Thread(new NotificationsThread(notifications)).start();
+                            notifications.setMessage("Notificação! título: " + parts[1] + ", autor: " + parts[2]);
+                            new Thread(new NotificationsThread(notifications)).start();
                         }
                         else answer = "Login não foi efetuado!";
                     }
