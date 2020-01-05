@@ -1,7 +1,4 @@
-import Exceptions.NomeJaExisteException;
-import Exceptions.NomeNaoExisteException;
-import Exceptions.PalavraPasseIncorretaException;
-import Exceptions.SoundCloudRemotoException;
+import Exceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +22,11 @@ public class NewClient implements java.lang.Runnable{
             List<String> etiquetas = new ArrayList<>();
             etiquetas.add("rock");
             etiquetas.add("pop");
-            String path = "/Users/joaonunoabreu/Desktop/teste.txt";
+            String path = "/Users/joaonunoabreu/Desktop/AlanWalker_Faded.mp3";
             System.out.println(sc.upload("titulo","interprete",1999,etiquetas,path));
+            System.out.println(sc.download(Integer.parseInt(nome),"/Users/joaonunoabreu/Desktop/musicas"));
         }
-        catch(NomeJaExisteException | SoundCloudRemotoException | NomeNaoExisteException | PalavraPasseIncorretaException e){
+        catch(Exception e){
             System.out.println(e.getMessage());
         }
     }

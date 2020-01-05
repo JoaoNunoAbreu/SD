@@ -7,11 +7,11 @@ public class Server {
 
         ServerSocket ss = new ServerSocket(12345);
         SoundCloud b = new SoundCloud();
-        Notifications n = new Notifications();
+        //Notifications n = new Notifications();
 
         while(true){
             Socket s = ss.accept();
-            new Thread(new ServerWorker(s,b,n)).start();
+            new Thread(new ServerWorker(s,b)).start();
         }
     }
 }
