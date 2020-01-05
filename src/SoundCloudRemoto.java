@@ -57,7 +57,7 @@ public class SoundCloudRemoto{
         }
     }
 
-    public String upload(String titulo, String interprete, int ano, List<String> etiquetas, String path) throws SoundCloudRemotoException {
+    public synchronized String upload(String titulo, String interprete, int ano, List<String> etiquetas, String path) throws SoundCloudRemotoException {
         String str_etiquetas = "";
         for(int i = 0; i < etiquetas.size(); i++) {
             if (i == etiquetas.size() - 1)
@@ -76,7 +76,7 @@ public class SoundCloudRemoto{
         }
     }
 
-    public String download(int id, String path) throws MusicaNaoExisteException,SoundCloudRemotoException{
+    public synchronized String download(int id, String path) throws MusicaNaoExisteException,SoundCloudRemotoException{
         String line = "download " + id + " " + path;
         pw.println(line);
         pw.flush();
